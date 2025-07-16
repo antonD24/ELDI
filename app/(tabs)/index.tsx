@@ -1,75 +1,81 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { useLiveLocation } from '@/hooks/useLiveLocation';
+import { Pressable, Text, View } from 'react-native';
 
 export default function HomeScreen() {
+  const { location, errorMsg } = useLiveLocation();
+
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+
+    <View className="flex-1 justify-center items-center">
+
+      <Text className='absolute top-1/4'>Hello User</Text>
+
+      {/* Emergency Button */}
+      <Pressable className="w-[50%] aspect-square bg-red-600 rounded-full shadow-[0px_0px_10px_0px_rgba(0,0,0,0.25)] items-center justify-center z-10">
+        <Text className="text-white text-xl font-normal">Emergency</Text>
+      </Pressable>
+
+      {/* Status Panel */}
+      <View className="absolute bottom-0 left-0 right-0 h-1/2 bg-slate-800 rounded-tl-[50px] rounded-tr-[50px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.25)] p-4 items-center justify-center">
+        <View className="mx-auto my-auto w-[95%] h-[30%] bg-slate-900 rounded-[50px] mt-1 items-center justify-center px-6 py-4">
+
+
+        </View>
+      
+
+
+      {/* Coordinates Pane */}
+
+      <View className="absolute bottom-32 w-[95%] h-[30%] bg-slate-900 rounded-[50px] px-6 py-4">
+        <View className="h-px w-[90%] bg-gray-400 mx-auto my-auto">
+          <View className="flex-row justify-around items-center">
+            {/* LAT */}
+            <View className="flex-row pt-3 items-center gap-2">
+              <View className="absolute bottom-16 left-3 my-1 w-28 h-8 bg-slate-800 rounded-[40px] items-center justify-center">
+
+                  <Text className='color-white text-lg'>{location?.coords.latitude.toFixed(4)}</Text>
+
+
+
+              </View>
+              <View className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-slate-900 items-center justify-center flex">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <View key={i} className="w-full h-0.5 bg-white my-0.5" />
+                ))}
+              </View>
+
+
+              <Text className="text-white">Latitude</Text>
+            </View>
+            {/* LONG */}
+            <View className="flex-row pt-3 items-center gap-2">
+              <View className="absolute bottom-16 left-3 my-1 w-28 h-8 bg-slate-800 rounded-[40px] items-center justify-center">
+                <Text className='color-white text-lg'>{location?.coords.longitude.toFixed(4)}</Text>
+              </View>
+              <View className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-slate-900 items-center justify-center transform rotate-90 flex">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <View key={i} className="w-full h-0.5 bg-white my-0.5" />
+                ))}
+              </View>
+              <Text className="text-white">Longitude</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+      </View>
+    </View>
+
+
+
+
+
+
+
+
+
+
   );
 }
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+
