@@ -47,9 +47,11 @@ export default function SignIn() {
                         style={{ width: 450, height: 450 }}
                     />
                 </View>
+                 {error &&
                 <View className='w-[80%] h-[8%]  bg-red-600 rounded-full ansolute bottom-[5%] justify-center items-center'>
-                    {error && <Text className='color-white font-extrabold text-lg capitalize'>{error}</Text>}
+                    <Text className='color-white font-extrabold text-lg capitalize'>{error}</Text>
                 </View>
+        }
                 <View className="bg-sky-950 w-[100%] mb-[50%] rounded-[50px] px-6 py-2 items-center justify-center ">
                     <View className='mb-5'></View>
                     <TextInput value={email} onChangeText={setEmail} autoCorrect={false} autoCapitalize='none' placeholder='E-mail' placeholderTextColor='gray' className="bg-gray-100 w-full px-6 py-[7%] mb-5 rounded-full shadow-md text-black"></TextInput>
