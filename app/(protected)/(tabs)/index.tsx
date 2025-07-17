@@ -17,8 +17,8 @@ export default function HomeScreen() {
       </Pressable>
 
       {/* Status Panel */}
-      <View className="absolute bottom-0 left-0 right-0 h-1/2 bg-slate-800 rounded-tl-[50px] rounded-tr-[50px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.25)] p-4 items-center justify-center">
-        <View className="mx-auto my-auto w-[95%] h-[30%] bg-slate-900 rounded-[50px] mt-1 items-center justify-center px-6 py-4">
+      <View className="absolute bottom-0 left-0 right-0 h-1/2 bg-sky-900 rounded-tl-[50px] rounded-tr-[50px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.25)] p-4 items-center justify-center">
+        <View className="mx-auto my-auto w-[95%] h-[30%] bg-sky-950 rounded-[50px] mt-1 items-center justify-center px-6 py-4">
 
 
         </View>
@@ -27,12 +27,12 @@ export default function HomeScreen() {
 
       {/* Coordinates Pane */}
 
-      <View className="absolute bottom-32 w-[95%] h-[30%] bg-slate-900 rounded-[50px] px-6 py-4">
+      <View className="absolute bottom-32 w-[95%] h-[30%] bg-sky-950 rounded-[50px] px-6 py-4">
         <View className="h-px w-[90%] bg-gray-400 mx-auto my-auto">
           <View className="flex-row justify-around items-center">
             {/* LAT */}
             <View className="flex-row pt-3 items-center gap-2">
-              <View className="absolute bottom-16 left-3 my-1 w-28 h-8 bg-slate-800 rounded-[40px] items-center justify-center">
+              <View className="absolute bottom-16 left-3 my-1 w-28 h-8 bg-sky-900 rounded-[40px] items-center justify-center">
 
                   <Text className='color-white text-lg'>{location?.coords.latitude.toFixed(4)}</Text>
 
@@ -50,10 +50,10 @@ export default function HomeScreen() {
             </View>
             {/* LONG */}
             <View className="flex-row pt-3 items-center gap-2">
-              <View className="absolute bottom-16 left-3 my-1 w-28 h-8 bg-slate-800 rounded-[40px] items-center justify-center">
+              <View className="absolute bottom-16 left-3 my-1 w-28 h-8 bg-sky-900 rounded-[40px] items-center justify-center">
                 <Text className='color-white text-lg'>{location?.coords.longitude.toFixed(4)}</Text>
               </View>
-              <View className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-slate-900 items-center justify-center transform rotate-90 flex">
+              <View className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-sky-950 items-center justify-center transform rotate-90 flex">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <View key={i} className="w-full h-0.5 bg-white my-0.5" />
                 ))}

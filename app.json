@@ -4,8 +4,8 @@
     "slug": "ELDI",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/eldi.png",
-    "scheme": "eldi", 
+    "icon": "./assets/images/eldi-mobile.png",
+    "scheme": "eldi",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -17,13 +17,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/eldi.png",
+        "foregroundImage": "./assets/images/eldi-mobile.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "permissions": [
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
       ],
@@ -45,15 +43,23 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/eldi.png",
+          "image": "./assets/images/eldi-mobile.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8ddc9063-a9c4-4886-8d91-08fe992a09f8"
+      }
+    },
+    "owner": "david343"
   }
 }
