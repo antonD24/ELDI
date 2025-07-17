@@ -3,7 +3,7 @@ import { Amplify } from 'aws-amplify';
 import { autoSignIn, signUp } from 'aws-amplify/auth';
 import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Image, Pressable, Text, TextInput, View } from 'react-native';
 import outputs from '../../amplify_outputs.json';
 
 
@@ -104,16 +104,27 @@ export default function ScreenSignUp() {
 
     return (
         <View className="justify-center flex-1 p-4 items-center">
-            <Text className='text-4xl absolute top-[5%]'>Create an account</Text>
-            <View className="bg-sky-950 w-[100%] h-[60%] mb-16 rounded-[50px] px-6 py-6 items-center justify-center ">
+            <View className="w-full items-center">
+                <Image
+                    className="shadow-sm"
+                    source={require('../.././assets/images/Register.png')}
+                    style={{
+                        width: '100%',
+                        height: undefined,
+                        aspectRatio: 1,
+                        maxWidth: 450,
+                    }}
+                    resizeMode="contain"
+                />
+                {error ? (
+                    <Text className="text-red-500 mt-2 text-center">{error}</Text>
+                ) : null}
+            </View>
+            <View className="bg-sky-950 w-[100%] h-[35%] mb-[70%] rounded-[50px] px-6 py-6 items-center justify-center ">
                 <View className='mb-5'></View>
                 <TextInput value={email} onChangeText={setEmail} autoCorrect={false} autoCapitalize='none' placeholder='E-mail' placeholderTextColor='gray' className="bg-gray-100 w-full px-6 py-[7%] mb-5 rounded-full shadow-md text-black" />
                 <TextInput value={password} onChangeText={setPassword} secureTextEntry placeholder='Password' placeholderTextColor='gray' className="bg-gray-100 w-full px-6 py-[7%] mb-5 rounded-full shadow-md text-black" />
                 <TextInput value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry placeholder='Confirm Password' placeholderTextColor='gray' className="bg-gray-100 w-full px-6 py-[7%] mb-5 rounded-full shadow-md text-black" />
-
-                {/* <TextInput value={name} onChangeText={setName} autoCorrect={false} placeholder='Name' placeholderTextColor='gray' className="bg-gray-100 w-full px-6 py-[7%] mb-5 rounded-full shadow-md text-black" />
-                <TextInput value={age} onChangeText={setAge} keyboardType='numeric' placeholder='Age' placeholderTextColor='gray' className="bg-gray-100 w-full px-6 py-[7%] mb-5 rounded-full shadow-md text-black" />
-                 */}
                 {showCodeInput && (
                     <TextInput value={code} onChangeText={setCode} autoCorrect={false} autoCapitalize='none' placeholder='Confirmation Code' placeholderTextColor='gray' className="bg-gray-100 w-full px-6 py-[7%] mb-5 rounded-full shadow-md text-black" />
                 )}
@@ -124,7 +135,6 @@ export default function ScreenSignUp() {
                         <Text className="text-white text-xl mx-auto font-semibold">Cancel</Text>
                     </Pressable>
                 </Link>
-
                 {!showCodeInput ? (
                     <Pressable onPress={onSignUp} className="bg-sky-950 w-[45%] px-6 py-6 rounded-full shadow-md">
                         <Text className="text-white text-xl mx-auto font-semibold">Sign Up</Text>
@@ -134,7 +144,6 @@ export default function ScreenSignUp() {
                         <Text className="text-white text-xl mx-auto font-semibold">Confirm Code</Text>
                     </Pressable>
                 )}
-
             </View>
         </View>
     );

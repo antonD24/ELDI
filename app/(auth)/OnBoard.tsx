@@ -10,12 +10,19 @@ export default function OnBoardScreen() {
 
     return (
         <View className="flex-1 justify-center items-center">
-            <View className="h-3/4">
-                <Image className="shadow-sm"
-                    source={require('../.././assets/images/eldi-mobile.png')}
-                    style={{ width: 450, height: 450 }}
-                />
-            </View>
+            <View className="w-full items-center">
+                                <Image 
+                                    className="shadow-sm"
+                                    source={require('../.././assets/images/eldi-mobile.png')}
+                                    style={{
+                                        width: '100%',
+                                        height: undefined,
+                                        aspectRatio: 1,
+                                        maxWidth: 450,
+                                    }}
+                                    resizeMode="contain"
+                                />
+                            </View>
 
             <View className="flex-row justify-around items-center absolute top-[85%] w-[100%] ">
                 <Link href="/(auth)/signin" push asChild>
