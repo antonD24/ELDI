@@ -2,36 +2,20 @@ import { Amplify } from 'aws-amplify';
 
 import { autoSignIn, signUp } from 'aws-amplify/auth';
 import { Link, useRouter } from 'expo-router';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Animated, Image, KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from 'react-native';
 import outputs from '../../amplify_outputs.json';
+import { useButtonScaleAnimation } from '../../hooks/useButtonScaleAnimation';
     
 Amplify.configure(outputs);
 
 export default function ScreenSignUp() {
 
-    // Animated values for all three buttons
-    const cancelScale = useRef(new Animated.Value(1)).current;
-    const signUpScale = useRef(new Animated.Value(1)).current;
-    const confirmScale = useRef(new Animated.Value(1)).current;
+    // Animation hook
+    const { scale: cancelScale, animateIn: cancelIn, animateOut: cancelOut } = useButtonScaleAnimation();
+    const { scale: signUpScale, animateIn: signUpIn, animateOut: signUpOut } = useButtonScaleAnimation();
+    const { scale: confirmScale, animateIn: confirmIn, animateOut: confirmOut } = useButtonScaleAnimation();
     const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-    const animateIn = (animatedValue: Animated.Value) => {
-        Animated.spring(animatedValue, {
-            toValue: 0.95,
-            useNativeDriver: true,
-            speed: 50,
-            bounciness: 10,
-        }).start();
-    };
-    const animateOut = (animatedValue: Animated.Value) => {
-        Animated.spring(animatedValue, {
-            toValue: 1,
-            useNativeDriver: true,
-            speed: 50,
-            bounciness: 10,
-        }).start();
-    };
 
     // Router for navigation
     const router = useRouter();
@@ -209,8 +193,8 @@ export default function ScreenSignUp() {
                     <AnimatedPressable
                         className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md"
                         style={{ transform: [{ scale: cancelScale }] }}
-                        onPressIn={() => animateIn(cancelScale)}
-                        onPressOut={() => animateOut(cancelScale)}
+                        onPressIn={cancelIn}
+                        onPressOut={cancelOut}
                     >
                         <Text className="text-white text-xl mx-auto font-semibold">Cancel</Text>
                     </AnimatedPressable>
@@ -220,8 +204,8 @@ export default function ScreenSignUp() {
                         onPress={onSignUp}
                         className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md"
                         style={{ transform: [{ scale: signUpScale }] }}
-                        onPressIn={() => animateIn(signUpScale)}
-                        onPressOut={() => animateOut(signUpScale)}
+                        onPressIn={signUpIn}
+                        onPressOut={signUpOut}
                     >
                         <Text className="text-white text-xl mx-auto font-semibold">Create</Text>
                     </AnimatedPressable>
@@ -230,8 +214,8 @@ export default function ScreenSignUp() {
                         onPress={onConfirmSignUP}
                         className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md"
                         style={{ transform: [{ scale: confirmScale }] }}
-                        onPressIn={() => animateIn(confirmScale)}
-                        onPressOut={() => animateOut(confirmScale)}
+                        onPressIn={confirmIn}
+                        onPressOut={confirmOut}
                     >
                         <Text className="text-white text-xl mx-auto font-semibold">Confirm Code</Text>
                     </AnimatedPressable>

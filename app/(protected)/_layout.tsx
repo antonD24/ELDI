@@ -35,6 +35,12 @@ export default function ProtectedLayout() {
        }} />
       
       <Stack.Screen name="+not-found" />
+      <Stack.Screen name="editProfile" options={{ 
+                headerShown: false,
+                presentation: "modal",
+                gestureEnabled: false,
+       }} />
+      
 
     </Stack>
 

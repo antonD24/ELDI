@@ -52,6 +52,10 @@ export default function RootLayout() {
               headerShown: false,
               gestureEnabled: false,
               }} />
+
+              
+
+              
             
             
 

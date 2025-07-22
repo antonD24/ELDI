@@ -2,9 +2,10 @@ import { Amplify } from 'aws-amplify';
 
 import { signIn } from 'aws-amplify/auth';
 import { Link, useRouter } from 'expo-router';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Animated, Image, KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from 'react-native';
 import outputs from '../../amplify_outputs.json';
+import { useButtonScaleAnimation } from '../../hooks/useButtonScaleAnimation';
 
 
 Amplify.configure(outputs);
@@ -17,27 +18,10 @@ export default function SignIn() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    //Animation
-    const cancelScale = useRef(new Animated.Value(1)).current;
-    const signInScale = useRef(new Animated.Value(1)).current;
+    // Animation hooks for buttons
+    const { scale: cancelScale, animateIn: cancelIn, animateOut: cancelOut } = useButtonScaleAnimation();
+    const { scale: signInScale, animateIn: signInIn, animateOut: signInOut } = useButtonScaleAnimation();
     const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-    const animateIn = (animatedValue: Animated.Value) => {
-        Animated.spring(animatedValue, {
-            toValue: 0.95,
-            useNativeDriver: true,
-            speed: 50,
-            bounciness: 10,
-        }).start();
-    };
-    const animateOut = (animatedValue: Animated.Value) => {
-        Animated.spring(animatedValue, {
-            toValue: 1,
-            useNativeDriver: true,
-            speed: 50,
-            bounciness: 10,
-        }).start();
-    };
     // Function to handle sign-in
     // This function will be called when the user presses the "Sign In" button
     // It uses the Amplify signIn method to authenticate the user with the provided email and password
@@ -126,8 +110,8 @@ export default function SignIn() {
                     <AnimatedPressable
                         className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md"
                         style={{ transform: [{ scale: cancelScale }] }}
-                        onPressIn={() => animateIn(cancelScale)}
-                        onPressOut={() => animateOut(cancelScale)}
+                        onPressIn={cancelIn}
+                        onPressOut={cancelOut}
                     >
                         <Text className="text-white text-xl text-center font-semibold">Cancel</Text>
                     </AnimatedPressable>
@@ -137,8 +121,8 @@ export default function SignIn() {
                     onPress={onSignIn}
                     className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md"
                     style={{ transform: [{ scale: signInScale }] }}
-                    onPressIn={() => animateIn(signInScale)}
-                    onPressOut={() => animateOut(signInScale)}
+                    onPressIn={signInIn}
+                    onPressOut={signInOut}
                 >
                     <Text className="text-white text-xl text-center font-semibold">Sign In</Text>
                 </AnimatedPressable>

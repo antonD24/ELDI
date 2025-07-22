@@ -1,8 +1,14 @@
+import { useButtonScaleAnimation } from '@/hooks/useButtonScaleAnimation';
 import { useLiveLocation } from '@/hooks/useLiveLocation';
-import { Pressable, Text, View } from 'react-native';
+import { Animated, Pressable, Text, View } from 'react-native';
 
 export default function HomeScreen() {
+
   const { location, errorMsg } = useLiveLocation();
+
+  // Animation hook
+    const { scale: EmergencyScale, animateIn: EmergencyIn, animateOut: EmergencyOut } = useButtonScaleAnimation();
+    const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 
   return (
@@ -12,9 +18,13 @@ export default function HomeScreen() {
       <Text className='absolute top-1/4'>Hello User</Text>
 
       {/* Emergency Button */}
-      <Pressable className="w-[50%] aspect-square bg-red-600 rounded-full shadow-[0px_0px_10px_0px_rgba(0,0,0,0.25)] items-center justify-center z-10">
+      <AnimatedPressable  style={{ transform: [{ scale: EmergencyScale }] }}
+                        onPressIn={EmergencyIn}
+                        onPressOut={EmergencyOut}
+                        onPress={() => console.log("Emergency Pressed")}
+      className="w-[50%] aspect-square bg-red-600 rounded-full shadow-[0px_0px_10px_0px_rgba(0,0,0,0.25)] items-center justify-center z-10">
         <Text className="text-white text-xl font-normal">Emergency</Text>
-      </Pressable>
+      </AnimatedPressable>
 
       {/* Status Panel */}
       <View className="absolute bottom-0 left-0 right-0 h-1/2 bg-sky-900 rounded-tl-[50px] rounded-tr-[50px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.25)] p-4 items-center justify-center">
