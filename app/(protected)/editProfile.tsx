@@ -42,7 +42,7 @@ export default function editProfile() {
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-1 w-[90%] items-center justify-start mt-5 mx-auto">
-        <View className="bg-sky-800 w-full h-[85%] items-center justify-start rounded-[50px] shadow-md">
+        <View className="bg-sky-950 w-full h-[85%] items-center justify-start rounded-[50px] shadow-md">
           <ScrollView className="w-full h-full p-6" contentContainerStyle={{ alignItems: 'center', gap: 10 }}>
             <Text className="text-white text-sm font-medium mt-2">ID number</Text>
             <TextInput 

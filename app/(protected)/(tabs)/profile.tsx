@@ -24,8 +24,7 @@ export default function TabThreeScreen() {
 
   // Animation hook
   const { scale: EditScale, animateIn: EditIn, animateOut: EditOut } = useButtonScaleAnimation();
-  const { scale: cancelScale, animateIn: cancelIn, animateOut: cancelOut } = useButtonScaleAnimation();
-  const { scale: confirmScale, animateIn: confirmIn, animateOut: confirmOut } = useButtonScaleAnimation();
+ 
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
   
@@ -33,7 +32,7 @@ export default function TabThreeScreen() {
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-1 w-[90%] items-center justify-center mx-auto">
-        <View className="bg-sky-800 w-full h-[77%] items-center justify-center mt-5 rounded-[50px] shadow-md">
+        <View className="bg-sky-950 w-full h-[77%] items-center justify-center mt-5 rounded-[50px] shadow-md">
           <ScrollView className="w-full h-full p-6" contentContainerStyle={{ alignItems: 'center', gap: 10 }}>
             <Text className="text-white text-sm font-medium mt-2">ID number</Text>
             <Text className="bg-gray-100 w-full text-lg px-4 py-4 text-center rounded-[50px]">
