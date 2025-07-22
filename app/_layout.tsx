@@ -18,26 +18,39 @@ export default function RootLayout() {
         return null;
       }
 
+      
+
     return (
       <Authenticator.Provider>
 
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <StatusBar style="auto" />
         <Stack>
-          <Stack.Screen name="(auth)/OnBoard" options={{headerShown: false,}} />
+          <Stack.Screen name="(auth)/OnBoard" options={{
+            headerShown: false,
+            gestureEnabled: false,
+            }} />
+
             <Stack.Screen name="(auth)/signin" options={{
                 headerShown: false,
                 presentation: "modal",
-                gestureEnabled: false
-                ,}} />
+                gestureEnabled: false,
+                }} />
+
+                <Stack.Screen name="(auth)/resetPassword" options={{
+                headerShown: false,
+                presentation: "modal",
+                gestureEnabled: false,
+                }} />
 
              <Stack.Screen name="(auth)/signup" options={{
                 headerShown: false,
-                presentation: "modal"
-                ,}} />
+                presentation: "modal",
+                gestureEnabled: false,
+                }} />
             <Stack.Screen name="(protected)" options={{
               headerShown: false,
-              gestureEnabled: false
+              gestureEnabled: false,
               }} />
             
             

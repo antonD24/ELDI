@@ -2,26 +2,52 @@ import { Amplify } from 'aws-amplify';
 
 import { autoSignIn, signUp } from 'aws-amplify/auth';
 import { Link, useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Image, Pressable, Text, TextInput, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Animated, Image, KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from 'react-native';
 import outputs from '../../amplify_outputs.json';
-
-
+    
 Amplify.configure(outputs);
 
 export default function ScreenSignUp() {
 
+    // Animated values for all three buttons
+    const cancelScale = useRef(new Animated.Value(1)).current;
+    const signUpScale = useRef(new Animated.Value(1)).current;
+    const confirmScale = useRef(new Animated.Value(1)).current;
+    const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+    const animateIn = (animatedValue: Animated.Value) => {
+        Animated.spring(animatedValue, {
+            toValue: 0.95,
+            useNativeDriver: true,
+            speed: 50,
+            bounciness: 10,
+        }).start();
+    };
+    const animateOut = (animatedValue: Animated.Value) => {
+        Animated.spring(animatedValue, {
+            toValue: 1,
+            useNativeDriver: true,
+            speed: 50,
+            bounciness: 10,
+        }).start();
+    };
+
+    // Router for navigation
     const router = useRouter();
+    // State for email, password, confirm password, error message, confirmation code, and sign-up session
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [name, setName] = useState('');
-    const [age, setAge] = useState('');
     const [error, setError] = useState('');
     const [code, setCode] = useState('');
     const [showCodeInput, setShowCodeInput] = useState(false);
     const [signUpSession, setSignUpSession] = useState<any>(null);
 
+
+    // Function to handle sign-up
+    // This function will be called when the user presses the "Sign Up" button
+    // It uses the Amplify signUp method to create a new user with the provided email
     const onSignUp = async () => {
         setError('');
         setShowCodeInput(false);
@@ -41,7 +67,7 @@ export default function ScreenSignUp() {
                 options: {
                     userAttributes: {
                         email: email,
-                        
+
                     },
                     autoSignIn: {
                         enabled: true,
@@ -67,6 +93,10 @@ export default function ScreenSignUp() {
         }
     };
 
+    // Function to handle confirmation of sign-up
+    // This function will be called when the user presses the "Confirm Code" button
+    // It uses the Amplify confirmSignUp method to verify the provided confirmation code
+
     const onConfirmSignUP = async () => {
         setError('');
         try {
@@ -81,7 +111,7 @@ export default function ScreenSignUp() {
             });
             console.log('ConfirmSignUp response:', response);
             if (response.nextStep?.signUpStep === 'COMPLETE_AUTO_SIGN_IN') {
-                const {nextStep} = await autoSignIn();
+                const { nextStep } = await autoSignIn();
                 if (nextStep) {
                     router.replace('/(protected)/(tabs)');
                 } else {
@@ -103,49 +133,112 @@ export default function ScreenSignUp() {
 
 
     return (
-        <View className="justify-center flex-1 p-4 items-center">
-            <View className="w-full items-center">
-                <Image
-                    className="shadow-sm"
-                    source={require('../.././assets/images/Register.png')}
-                    style={{
-                        width: '100%',
-                        height: undefined,
-                        aspectRatio: 1,
-                        maxWidth: 450,
-                    }}
-                    resizeMode="contain"
-                />
-                {error ? (
-                    <Text className="text-red-500 mt-2 text-center">{error}</Text>
-                ) : null}
-            </View>
-            <View className="bg-sky-950 w-[100%] h-[35%] mb-[70%] rounded-[50px] px-6 py-6 items-center justify-center ">
-                <View className='mb-5'></View>
-                <TextInput value={email} onChangeText={setEmail} autoCorrect={false} autoCapitalize='none' placeholder='E-mail' placeholderTextColor='gray' className="bg-gray-100 w-full px-6 py-[7%] mb-5 rounded-full shadow-md text-black" />
-                <TextInput value={password} onChangeText={setPassword} secureTextEntry placeholder='Password' placeholderTextColor='gray' className="bg-gray-100 w-full px-6 py-[7%] mb-5 rounded-full shadow-md text-black" />
-                <TextInput value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry placeholder='Confirm Password' placeholderTextColor='gray' className="bg-gray-100 w-full px-6 py-[7%] mb-5 rounded-full shadow-md text-black" />
-                {showCodeInput && (
-                    <TextInput value={code} onChangeText={setCode} autoCorrect={false} autoCapitalize='none' placeholder='Confirmation Code' placeholderTextColor='gray' className="bg-gray-100 w-full px-6 py-[7%] mb-5 rounded-full shadow-md text-black" />
-                )}
-            </View>
-            <View className="flex-row justify-around absolute top-[90%] w-[100%] ">
+
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={{ flex: 1, padding: 16, alignItems: 'center', justifyContent: 'center' }}
+                keyboardVerticalOffset={100}
+            >
+                <View className="w-full items-center">
+                    <Image
+                        className="shadow-sm"
+                        source={require('../.././assets/images/Register.png')}
+                        style={{
+                            width: '100%',
+                            height: undefined,
+                            aspectRatio: 1,
+                            maxWidth: 450,
+                        }}
+                        resizeMode="contain"
+                    />
+
+                </View>
+
+                {/* Error Message */}
+                <View className='w-full mb-4 min-h-[56px] items-center justify-center'>
+                    <View className={`bg-red-600 rounded-full py-6 px-6 items-center ${error ? '' : 'opacity-0'}`}>
+                        <Text className='text-white font-extrabold capitalize text-lg text-center'>{error || ' '}</Text>
+                    </View>
+                </View>
+
+                <View className="bg-sky-950 w-full rounded-[50px] px-6 py-8 items-center justify-center mb-60">
+                    <TextInput
+                        value={email}
+                        onChangeText={setEmail}
+                        autoCorrect={false}
+                        autoCapitalize='none'
+                        placeholder='E-mail'
+                        placeholderTextColor='gray'
+                        className="bg-gray-100 w-full px-6 py-6 mb-4 rounded-full shadow-md text-black"
+                    />
+                    <TextInput
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        autoCorrect={false}
+                        placeholder='Password'
+                        placeholderTextColor='gray'
+                        className="bg-gray-100 w-full px-6 py-6 mb-4 rounded-full shadow-md text-black"
+                    />
+                    <TextInput
+                        value={confirmPassword}
+                        onChangeText={setConfirmPassword}
+                        secureTextEntry
+                        autoCorrect={false}
+                        placeholder='Confirm Password'
+                        placeholderTextColor='gray'
+                        className="bg-gray-100 w-full px-6 py-6 rounded-full shadow-md text-black"
+                    />
+                    {showCodeInput && (
+                        <TextInput
+                            value={code}
+                            onChangeText={setCode}
+                            autoCorrect={false}
+                            autoCapitalize='none'
+                            placeholder='Confirmation Code'
+                            placeholderTextColor='gray'
+                            className="bg-gray-100 w-full px-6 py-6 rounded-full mt-4 shadow-md text-black" />
+                    )}
+                </View>
+            
+
+
+
+            <View className="w-full flex-row justify-between absolute bottom-[5%]">
                 <Link href="/(auth)/OnBoard" replace asChild>
-                    <Pressable className="bg-sky-950 w-[45%] px-6 py-6 rounded-full shadow-md">
+                    <AnimatedPressable
+                        className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md"
+                        style={{ transform: [{ scale: cancelScale }] }}
+                        onPressIn={() => animateIn(cancelScale)}
+                        onPressOut={() => animateOut(cancelScale)}
+                    >
                         <Text className="text-white text-xl mx-auto font-semibold">Cancel</Text>
-                    </Pressable>
+                    </AnimatedPressable>
                 </Link>
                 {!showCodeInput ? (
-                    <Pressable onPress={onSignUp} className="bg-sky-950 w-[45%] px-6 py-6 rounded-full shadow-md">
-                        <Text className="text-white text-xl mx-auto font-semibold">Sign Up</Text>
-                    </Pressable>
+                    <AnimatedPressable
+                        onPress={onSignUp}
+                        className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md"
+                        style={{ transform: [{ scale: signUpScale }] }}
+                        onPressIn={() => animateIn(signUpScale)}
+                        onPressOut={() => animateOut(signUpScale)}
+                    >
+                        <Text className="text-white text-xl mx-auto font-semibold">Create</Text>
+                    </AnimatedPressable>
                 ) : (
-                    <Pressable onPress={onConfirmSignUP} className="bg-sky-950 w-[45%] px-6 py-6 rounded-full shadow-md">
+                    <AnimatedPressable
+                        onPress={onConfirmSignUP}
+                        className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md"
+                        style={{ transform: [{ scale: confirmScale }] }}
+                        onPressIn={() => animateIn(confirmScale)}
+                        onPressOut={() => animateOut(confirmScale)}
+                    >
                         <Text className="text-white text-xl mx-auto font-semibold">Confirm Code</Text>
-                    </Pressable>
+                    </AnimatedPressable>
                 )}
             </View>
-        </View>
+</KeyboardAvoidingView>
+
     );
 }
 

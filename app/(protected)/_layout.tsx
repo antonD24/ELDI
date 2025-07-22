@@ -1,19 +1,24 @@
 import { useAuthenticator } from '@aws-amplify/ui-react-native';
-import { Redirect, Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import React from "react";
 import 'react-native-reanimated';
-//const isLoggedIn = false;
 
 
-function ProtectedLayout() {
 
-    // if (!isLoggedIn) {
-    //   return <Redirect href= "/(auth)/OnBoard" />
-    // }
+export default function ProtectedLayout() {
+
+   
     const {authStatus} = useAuthenticator();
+    const router = useRouter();
 
-    if (authStatus == 'unauthenticated') {
-      return <Redirect href={'/(auth)/OnBoard'} />
+    React.useEffect(() => {
+      if (authStatus === 'unauthenticated') {
+        router.replace('/(auth)/OnBoard');
+      }
+    }, [authStatus, router]);
+
+    if (authStatus === 'unauthenticated') {
+      return null;
     }
 
 
@@ -38,4 +43,3 @@ function ProtectedLayout() {
 
   );
 }
-export default ProtectedLayout;

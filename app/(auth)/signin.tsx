@@ -2,19 +2,45 @@ import { Amplify } from 'aws-amplify';
 
 import { signIn } from 'aws-amplify/auth';
 import { Link, useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Image, KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Animated, Image, KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from 'react-native';
 import outputs from '../../amplify_outputs.json';
 
 
 Amplify.configure(outputs);
 
 export default function SignIn() {
+    
     const router = useRouter();
+    // State for email, password, and error message
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
+    //Animation
+    const cancelScale = useRef(new Animated.Value(1)).current;
+    const signInScale = useRef(new Animated.Value(1)).current;
+    const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+    const animateIn = (animatedValue: Animated.Value) => {
+        Animated.spring(animatedValue, {
+            toValue: 0.95,
+            useNativeDriver: true,
+            speed: 50,
+            bounciness: 10,
+        }).start();
+    };
+    const animateOut = (animatedValue: Animated.Value) => {
+        Animated.spring(animatedValue, {
+            toValue: 1,
+            useNativeDriver: true,
+            speed: 50,
+            bounciness: 10,
+        }).start();
+    };
+    // Function to handle sign-in
+    // This function will be called when the user presses the "Sign In" button
+    // It uses the Amplify signIn method to authenticate the user with the provided email and password
     const onSignIn = async () => {
         setError('');
         try {
@@ -42,7 +68,7 @@ export default function SignIn() {
             keyboardVerticalOffset={100}
         >
             {/* Image Section */}
-            <View className="w-full items-center mb-4">
+            <View className="w-full items-center">
                 <Image
                     className="shadow-sm"
                     source={require('../.././assets/images/sign.png')}
@@ -56,6 +82,9 @@ export default function SignIn() {
                 />
             </View>
 
+
+
+
             {/* Error Message */}
             <View className='w-full my-4 min-h-[56px] items-center justify-center'>
                 <View className={`bg-red-600 rounded-full py-6 px-6 items-center ${error ? '' : 'opacity-0'}`}>
@@ -64,7 +93,7 @@ export default function SignIn() {
             </View>
 
             {/* Input Fields */}
-            <View className="bg-sky-950 w-full rounded-[50px] px-6 py-8 items-center justify-center mb-16">
+            <View className="bg-sky-950 w-full rounded-[50px] px-6 py-8 items-center justify-center mb-72">
                 <TextInput
                     value={email}
                     onChangeText={setEmail}
@@ -85,17 +114,34 @@ export default function SignIn() {
                 />
             </View>
 
-            {/* Buttons */}
-            <View className="w-full flex-row justify-between mb-8">
-                <Link href="/(auth)/OnBoard" replace asChild>
-                    <Pressable className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md">
-                        <Text className="text-white text-xl text-center font-semibold">Cancel</Text>
+            <Link href="/(auth)/resetPassword" replace asChild>
+                    <Pressable className="w-full absolute px-6 py-6 bottom-[15%]">
+                        <Text className="text-slate-900 text-xl text-center font-semibold">Forgotten Password?</Text>
                     </Pressable>
                 </Link>
 
-                <Pressable onPress={onSignIn} className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md">
+            {/* Buttons */}
+            <View className="w-full flex-row justify-between absolute bottom-[5%]">
+                <Link href="/(auth)/OnBoard" replace asChild>
+                    <AnimatedPressable
+                        className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md"
+                        style={{ transform: [{ scale: cancelScale }] }}
+                        onPressIn={() => animateIn(cancelScale)}
+                        onPressOut={() => animateOut(cancelScale)}
+                    >
+                        <Text className="text-white text-xl text-center font-semibold">Cancel</Text>
+                    </AnimatedPressable>
+                </Link>
+
+                <AnimatedPressable
+                    onPress={onSignIn}
+                    className="bg-sky-950 w-[48%] px-6 py-6 rounded-full shadow-md"
+                    style={{ transform: [{ scale: signInScale }] }}
+                    onPressIn={() => animateIn(signInScale)}
+                    onPressOut={() => animateOut(signInScale)}
+                >
                     <Text className="text-white text-xl text-center font-semibold">Sign In</Text>
-                </Pressable>
+                </AnimatedPressable>
             </View>
         </KeyboardAvoidingView>
     )
