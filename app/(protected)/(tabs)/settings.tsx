@@ -1,10 +1,14 @@
+import { type Schema } from '@/amplify/data/resource';
 import { useAuthenticator } from '@aws-amplify/ui-react-native';
 import { AuthUser, getCurrentUser } from 'aws-amplify/auth';
+import { generateClient } from 'aws-amplify/data';
 import React from 'react';
 import { Alert, Animated, Pressable, SafeAreaView, Text, View } from 'react-native';
 import { useButtonScaleAnimation } from '../../../hooks/useButtonScaleAnimation';
 
 export default function TabScreenFour() {
+
+    const client = generateClient<Schema>();    
 
     // Animation hook
 
@@ -48,16 +52,26 @@ export default function TabScreenFour() {
             <View className="flex-1 w-[90%] items-center justify-center mx-auto">
 
                 <View className="bg-sky-800 w-full h-[10%] items-center mt-12 justify-center rounded-[50px] shadow-md ">
-
                     <Text className="bg-gray-100 w-[90%] text-lg px-4 py-4 justify-center text-center rounded-[50px]">{user?.signInDetails?.loginId}</Text>
                 </View>
 
+                <AnimatedPressable style={{ transform: [{ scale: signOutScale }] }}
+                        onPressIn={signOutIn}
+                        onPressOut={signOutOut}
+                        onPress={() => handleSignOut()}
+                        className="bg-sky-950 w-full px-6 py-6 mt-6 rounded-full shadow-md">
+                        <Text className="text-white text-xl mx-auto font-semibold">Delete Profile</Text>
+                    </AnimatedPressable>
+                
+
                 <View className="flex-1 w-full justify-end mb-20 px-4">
+                    
+                    
                     <AnimatedPressable style={{ transform: [{ scale: signOutScale }] }}
                         onPressIn={signOutIn}
                         onPressOut={signOutOut}
                         onPress={() => handleSignOut()}
-                        className="bg-sky-950 w-full px-6 py-6 rounded-full shadow-md">
+                        className="bg-red-600 w-full px-6 py-6 rounded-full shadow-md">
                         <Text className="text-white text-xl mx-auto font-semibold">Sign Out</Text>
                     </AnimatedPressable>
                 </View>

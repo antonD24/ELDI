@@ -1,10 +1,22 @@
+
+import type { Schema } from '@/amplify/data/resource';
 import { useButtonScaleAnimation } from '@/hooks/useButtonScaleAnimation';
 import { useLiveLocation } from '@/hooks/useLiveLocation';
+import { generateClient } from 'aws-amplify/data';
 import { Animated, Pressable, Text, View } from 'react-native';
 
+
+
 export default function HomeScreen() {
+  const client = generateClient<Schema>();
 
   const { location, errorMsg } = useLiveLocation();
+
+  const sendlocation = async () => {
+    await client.models.Emergency.create({
+      content: `Latitude: ${location?.coords.latitude.toFixed(4)}, Longitude: ${location?.coords.longitude.toFixed(4)}`,
+    });
+  };
 
   // Animation hook
     const { scale: EmergencyScale, animateIn: EmergencyIn, animateOut: EmergencyOut } = useButtonScaleAnimation();
@@ -15,13 +27,18 @@ export default function HomeScreen() {
 
     <View className="flex-1 justify-center items-center">
 
-      <Text className='absolute top-1/4'>Hello User</Text>
+    <View className="absolute top-0 left-0 right-0 bottom-0 items-center justify-center">
+      
+    </View>
 
       {/* Emergency Button */}
       <AnimatedPressable  style={{ transform: [{ scale: EmergencyScale }] }}
                         onPressIn={EmergencyIn}
                         onPressOut={EmergencyOut}
-                        onPress={() => console.log("Emergency Pressed")}
+                        onPress={() => {
+                          sendlocation();
+                          console.log('Emergency button pressed');
+                        }}
       className="w-[50%] aspect-square bg-red-600 rounded-full shadow-[0px_0px_10px_0px_rgba(0,0,0,0.25)] items-center justify-center z-10">
         <Text className="text-white text-xl font-normal">Emergency</Text>
       </AnimatedPressable>
@@ -87,5 +104,8 @@ export default function HomeScreen() {
 
   );
 }
+
+
+
 
 
