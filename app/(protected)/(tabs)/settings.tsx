@@ -8,11 +8,13 @@ import { useButtonScaleAnimation } from '../../../hooks/useButtonScaleAnimation'
 
 export default function TabScreenFour() {
 
-    const client = generateClient<Schema>();    
+
 
     // Animation hook
 
     const { scale: signOutScale, animateIn: signOutIn, animateOut: signOutOut } = useButtonScaleAnimation();
+    const { scale: deleteProfileScale, animateIn: deleteProfileIn, animateOut: deleteProfileOut } = useButtonScaleAnimation();
+
     const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 
@@ -46,6 +48,43 @@ export default function TabScreenFour() {
     }, []);
 
 
+    const client = generateClient<Schema>();
+
+    const deleteProfile = async () => {
+        try {
+            const { data: User, errors } = await client.models.User.list();
+            if (errors) {
+                console.error('Errors fetching user data:', errors);
+                return;
+            }
+            if (User && User.length > 0) {
+                const userId = User[0].id;
+                await client.models.User.delete({ id: userId });
+                console.log('Profile deleted successfully');
+                Alert.alert('Profile Deleted', 'Your profile has been successfully deleted.');
+            }
+        } catch (error) {
+            console.error('Error deleting profile:', error);
+        }
+    };
+
+    const handleDeleteProfile = () => {
+        Alert.alert(
+            'Delete Profile',
+            'Are you sure you want to delete your profile?',
+            [
+                {
+                    text: "Cancel",
+                    style: 'cancel',
+                },
+                {
+                    text: 'Confirm',
+                    onPress: () => deleteProfile(),
+                    style: 'destructive',
+                },
+            ]);
+    }
+
 
     return (
         <SafeAreaView className="flex-1">
@@ -55,18 +94,18 @@ export default function TabScreenFour() {
                     <Text className="bg-gray-100 w-[90%] text-lg px-4 py-4 justify-center text-center rounded-[50px]">{user?.signInDetails?.loginId}</Text>
                 </View>
 
-                <AnimatedPressable style={{ transform: [{ scale: signOutScale }] }}
-                        onPressIn={signOutIn}
-                        onPressOut={signOutOut}
-                        onPress={() => handleSignOut()}
-                        className="bg-sky-950 w-full px-6 py-6 mt-6 rounded-full shadow-md">
-                        <Text className="text-white text-xl mx-auto font-semibold">Delete Profile</Text>
-                    </AnimatedPressable>
-                
+                <AnimatedPressable style={{ transform: [{ scale: deleteProfileScale }] }}
+                    onPressIn={deleteProfileIn}
+                    onPressOut={deleteProfileOut}
+                    onPress={() => handleDeleteProfile()}
+                    className="bg-sky-950 w-full px-6 py-6 mt-6 rounded-full shadow-md">
+                    <Text className="text-white text-xl mx-auto font-semibold">Delete Profile</Text>
+                </AnimatedPressable>
+
 
                 <View className="flex-1 w-full justify-end mb-20 px-4">
-                    
-                    
+
+
                     <AnimatedPressable style={{ transform: [{ scale: signOutScale }] }}
                         onPressIn={signOutIn}
                         onPressOut={signOutOut}
@@ -77,6 +116,6 @@ export default function TabScreenFour() {
                 </View>
             </View>
         </SafeAreaView>
-    )
+    );
 
 }

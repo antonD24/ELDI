@@ -31,9 +31,9 @@ export function useLiveLocation() {
 
       subscription = await Location.watchPositionAsync(
         {
-          accuracy: Location.Accuracy.High,
-          timeInterval: 1000, // ms
-          distanceInterval: 0.5, // meters
+          accuracy: Location.Accuracy.Balanced, // Changed from High to Balanced
+          timeInterval: 5000, // Increased from 1000ms to 5000ms (5 seconds)
+          distanceInterval: 10, // Increased from 0.5m to 10m
         },
         (loc: Location.LocationObject) => setLocation(loc)
       );

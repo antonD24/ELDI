@@ -103,7 +103,7 @@ export default function editProfile() {
           }
 
           // Validate and format date if provided
-          let formattedDob = undefined;
+          let formattedDob = '';
           if (dob) {
             const dobDate = new Date(dob);
             if (isNaN(dobDate.getTime())) {
@@ -158,12 +158,12 @@ export default function editProfile() {
             id: idNumber, 
             firstname: firstName,
             lastname: lastName,
-            dob: formattedDob,
+            dob: formattedDob || '', // Ensure dob is always a string
             phone: formattedPhone,
             homeaddress: address,
             ICEname: ICEname,
             relationshipstatus: relationship,
-            ICEphone: formattedICEPhone,
+            ICEphone: formattedICEPhone ?? '',
             email: email
           };
 
@@ -269,7 +269,7 @@ export default function editProfile() {
               autoCapitalize='none'
               placeholder='ID Number'
               placeholderTextColor='gray'
-              className="bg-gray-100 w-full text-lg px-4 py-2 text-center justify-center rounded-[50px]" />
+              className="bg-gray-100 w-full text-lg px-4 py-4 text-center justify-center rounded-[50px]" />
             <Text className="text-white text-sm font-medium mt-2">First Name</Text>
             <TextInput
               value={firstName}
@@ -327,16 +327,16 @@ export default function editProfile() {
               placeholderTextColor='gray'
               className="bg-gray-100 w-full text-lg px-4 py-4 text-center rounded-[50px]" />
 
-            <Text className="text-white text-sm font-medium mt-2">Next of Kin</Text>
+            <Text className="text-white text-sm font-medium mt-2">Emergency Contact Name</Text>
             <TextInput
               value={ICEname}
               onChangeText={setICEname}
               autoCorrect={false}
               autoCapitalize='none'
-              placeholder='Next of Kin Name'
+              placeholder='Emergency Contact Name'
               placeholderTextColor='gray'
               className="bg-gray-100 w-full text-lg px-4 py-4 text-center rounded-[50px]" />
-            <Text className="text-white text-sm font-medium mt-2">Next of Kin Phone Number</Text>
+            <Text className="text-white text-sm font-medium mt-2">Emergency Contact Phone Number</Text>
             <TextInput
               value={ICEphone}
               onChangeText={setICEphone}

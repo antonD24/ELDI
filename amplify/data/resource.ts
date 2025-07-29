@@ -9,15 +9,15 @@ and "delete" any "Todo" records.
 const schema = a.schema({
   User: a.model({
     id: a.id().required(),
-    firstname: a.string(),
-    lastname: a.string(),
-    dob: a.date(),
+    firstname: a.string().required(),
+    lastname: a.string().required(),
+    dob: a.date().required(),
     email: a.email().required(),
     phone: a.phone(),
     homeaddress: a.string(),
-    ICEname: a.string(),
-    ICEphone: a.phone(),
-    relationshipstatus: a.string(),
+    ICEname: a.string().required(),
+    ICEphone: a.phone().required(),
+    relationshipstatus: a.string().required(),
 
     
 
@@ -27,14 +27,33 @@ const schema = a.schema({
   Emergency: a
     .model({
       content: a.string(),
-      isDone: a.boolean(),
-      name: a.customType({
-        firstname: a.string(),
-        lastname: a.string(),
+      natid: a.string().required(),
+      firstname: a.string().required(),
+      lastname: a.string().required(),
+      dob: a.date().required(),
+      email: a.email(),
+      phone: a.phone().required(),
+      homeaddress: a.string(),
+      ICEname: a.string().required(),
+      ICEphone: a.phone().required(),
+      relationshipstatus: a.string().required(),
+      location: a.customType({
+        lat: a.float(),
+        long: a.float(),
       }),
     })
     .authorization((allow) => [allow.authenticated()]),
-  
+
+  Locations: a.model({
+    name: a.string(),
+    type: a.enum(['defibrillator', 'hospital', 'safe_zone']),
+    location: a.customType({
+      lat: a.float(),
+      long: a.float(),
+    }),
+    description: a.string(),
+  }).authorization((allow) => [allow.authenticated()])
+
 });
 
 export type Schema = ClientSchema<typeof schema>;

@@ -129,12 +129,12 @@ export default function TabThreeScreen() {
               {address || 'Not provided'}
             </Text>
 
-            <Text className="text-white text-sm font-medium mt-2">Next of Kin</Text>
+            <Text className="text-white text-sm font-medium mt-2">Emergency Contact Name</Text>
             <Text className="bg-gray-100 w-full text-lg px-4 py-4 text-center rounded-[50px]">
               {ICEname || 'Not provided'}
             </Text>
 
-            <Text className="text-white text-sm font-medium mt-2">Next of Kin Phone Number</Text>
+            <Text className="text-white text-sm font-medium mt-2">Emergency Contact Phone Number</Text>
             <Text className="bg-gray-100 w-full text-lg px-4 py-4 text-center rounded-[50px]">
               {ICEphone || 'Not provided'}
             </Text>
