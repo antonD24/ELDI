@@ -7,7 +7,7 @@ specifies that any unauthenticated user can "create", "read", "update",
 and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  User: a.model({
+ User: a.model({
     id: a.id().required(),
     firstname: a.string().required(),
     lastname: a.string().required(),
@@ -41,8 +41,19 @@ const schema = a.schema({
         lat: a.float(),
         long: a.float(),
       }),
+      isActive: a.boolean().default(true),
+      isDone: a.boolean().default(false),
+      createdAt: a.datetime(),
+      updatedAt: a.datetime(),
     })
-    .authorization((allow) => [allow.authenticated()]),
+    .secondaryIndexes((index) => [
+      index('natid').sortKeys(['createdAt']).name('byNatidCreatedAt'),
+    ])
+    .authorization((allow) => [
+    allow.authenticated().to(['read', 'create', 'update']),
+    allow.guest().to(['read']), // Allow guest users to read for real-time updates
+    allow.groups(['admin', 'emergency-responders']).to(['create', 'read', 'update', 'delete'])
+  ]),
 
   Locations: a.model({
     name: a.string(),
@@ -54,6 +65,7 @@ const schema = a.schema({
     description: a.string(),
   }).authorization((allow) => [allow.authenticated()])
 
+  
 });
 
 export type Schema = ClientSchema<typeof schema>;
