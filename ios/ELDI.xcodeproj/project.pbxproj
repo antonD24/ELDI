@@ -7,27 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0224968715C371F9E7A32ACA /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED430E06D1DF0B186383B77D /* ExpoModulesProvider.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
+		4EE042F6603A367D082DA3C6 /* libPods-ELDI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9443A7B100DE3515D9052330 /* libPods-ELDI.a */; };
+		667CD71AF6929435964298CD /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AC5B42295CB44292831AB4 /* ExpoModulesProvider.swift */; };
+		965DE9C999D93D30AE0F207D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A58D689196DF5102B479421F /* PrivacyInfo.xcprivacy */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		C9C035D5E2B3ED318FE95A90 /* libPods-ELDI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BE1B5F420F56A401CE71C9 /* libPods-ELDI.a */; };
-		DDB469DA265C6186BA8844CE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 484DCB06AAAA6F57466B8942 /* PrivacyInfo.xcprivacy */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		03EFF10AB2617DB6C000FFBE /* Pods-ELDI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ELDI.release.xcconfig"; path = "Target Support Files/Pods-ELDI/Pods-ELDI.release.xcconfig"; sourceTree = "<group>"; };
+		0AE35ADBCA2AD6A54A84B4DF /* Pods-ELDI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ELDI.release.xcconfig"; path = "Target Support Files/Pods-ELDI/Pods-ELDI.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ELDI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ELDI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ELDI/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ELDI/Info.plist; sourceTree = "<group>"; };
-		43BE1B5F420F56A401CE71C9 /* libPods-ELDI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ELDI.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		484DCB06AAAA6F57466B8942 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = ELDI/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		A984BC042BBCF5528658FB95 /* Pods-ELDI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ELDI.debug.xcconfig"; path = "Target Support Files/Pods-ELDI/Pods-ELDI.debug.xcconfig"; sourceTree = "<group>"; };
+		18AC5B42295CB44292831AB4 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ELDI/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		9443A7B100DE3515D9052330 /* libPods-ELDI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ELDI.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A58D689196DF5102B479421F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = ELDI/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = ELDI/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		CA1949BC58D8791CBEA83FD5 /* Pods-ELDI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ELDI.debug.xcconfig"; path = "Target Support Files/Pods-ELDI/Pods-ELDI.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		ED430E06D1DF0B186383B77D /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ELDI/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ELDI/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* ELDI-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "ELDI-Bridging-Header.h"; path = "ELDI/ELDI-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9C035D5E2B3ED318FE95A90 /* libPods-ELDI.a in Frameworks */,
+				4EE042F6603A367D082DA3C6 /* libPods-ELDI.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,7 +53,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				484DCB06AAAA6F57466B8942 /* PrivacyInfo.xcprivacy */,
+				A58D689196DF5102B479421F /* PrivacyInfo.xcprivacy */,
 			);
 			name = ELDI;
 			sourceTree = "<group>";
@@ -62,19 +62,25 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				43BE1B5F420F56A401CE71C9 /* libPods-ELDI.a */,
+				9443A7B100DE3515D9052330 /* libPods-ELDI.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2FCB37C048C433C787DDF259 /* Pods */ = {
+		52EAB2C1D4B51396B0B8C2D6 /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				A984BC042BBCF5528658FB95 /* Pods-ELDI.debug.xcconfig */,
-				03EFF10AB2617DB6C000FFBE /* Pods-ELDI.release.xcconfig */,
+				7052F0FB5DF2AEEA3453B306 /* ELDI */,
 			);
-			name = Pods;
-			path = Pods;
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
+		7052F0FB5DF2AEEA3453B306 /* ELDI */ = {
+			isa = PBXGroup;
+			children = (
+				18AC5B42295CB44292831AB4 /* ExpoModulesProvider.swift */,
+			);
+			name = ELDI;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -91,8 +97,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				2FCB37C048C433C787DDF259 /* Pods */,
-				D6F7689B69B95EA29474E385 /* ExpoModulesProviders */,
+				989E001FB676484061C97543 /* Pods */,
+				52EAB2C1D4B51396B0B8C2D6 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -107,12 +113,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B8AF1A7167241776148997FA /* ELDI */ = {
+		989E001FB676484061C97543 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				ED430E06D1DF0B186383B77D /* ExpoModulesProvider.swift */,
+				CA1949BC58D8791CBEA83FD5 /* Pods-ELDI.debug.xcconfig */,
+				0AE35ADBCA2AD6A54A84B4DF /* Pods-ELDI.release.xcconfig */,
 			);
-			name = ELDI;
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -124,14 +132,6 @@
 			path = ELDI/Supporting;
 			sourceTree = "<group>";
 		};
-		D6F7689B69B95EA29474E385 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				B8AF1A7167241776148997FA /* ELDI */,
-			);
-			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -140,13 +140,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ELDI" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				D44F548AE6A3073EAEE46110 /* [Expo] Configure project */,
+				67B2B6BBD3F5784785798C3F /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				3F1F454A1FB7973AA6E071BE /* [CP] Embed Pods Frameworks */,
+				E6A99C99F3D2652CBA6E85E6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +196,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				DDB469DA265C6186BA8844CE /* PrivacyInfo.xcprivacy in Resources */,
+				965DE9C999D93D30AE0F207D /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,23 +240,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3F1F454A1FB7973AA6E071BE /* [CP] Embed Pods Frameworks */ = {
+		67B2B6BBD3F5784785798C3F /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ELDI/Pods-ELDI-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			inputFileListPaths = (
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ELDI/Pods-ELDI-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-ELDI/expo-configure-project.sh\"\n";
 		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -300,24 +301,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ELDI/Pods-ELDI-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D44F548AE6A3073EAEE46110 /* [Expo] Configure project */ = {
+		E6A99C99F3D2652CBA6E85E6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ELDI/Pods-ELDI-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
 			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-ELDI/expo-configure-project.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ELDI/Pods-ELDI-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -327,7 +327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				0224968715C371F9E7A32ACA /* ExpoModulesProvider.swift in Sources */,
+				667CD71AF6929435964298CD /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,7 +336,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A984BC042BBCF5528658FB95 /* Pods-ELDI.debug.xcconfig */;
+			baseConfigurationReference = CA1949BC58D8791CBEA83FD5 /* Pods-ELDI.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -372,7 +372,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 03EFF10AB2617DB6C000FFBE /* Pods-ELDI.release.xcconfig */;
+			baseConfigurationReference = 0AE35ADBCA2AD6A54A84B4DF /* Pods-ELDI.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

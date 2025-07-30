@@ -7,7 +7,9 @@ specifies that any unauthenticated user can "create", "read", "update",
 and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
- User: a.model({
+  EmergencyStatus: a.enum(['CREATED', 'OPEN', 'ASSIGNED', 'IN_PROGRESS', 'COMPLETE', 'REDIRECTED']),
+
+  User: a.model({
     id: a.id().required(),
     firstname: a.string().required(),
     lastname: a.string().required(),
@@ -41,8 +43,9 @@ const schema = a.schema({
         lat: a.float(),
         long: a.float(),
       }),
-      isActive: a.boolean().default(true),
-      isDone: a.boolean().default(false),
+      status: a.ref('EmergencyStatus'),
+      ambulanceId: a.id(),
+      ambulance: a.belongsTo('Ambulance', 'ambulanceId'),
       createdAt: a.datetime(),
       updatedAt: a.datetime(),
     })
@@ -51,9 +54,46 @@ const schema = a.schema({
     ])
     .authorization((allow) => [
     allow.authenticated().to(['read', 'create', 'update']),
-    allow.guest().to(['read']), // Allow guest users to read for real-time updates
-    allow.groups(['admin', 'emergency-responders']).to(['create', 'read', 'update', 'delete'])
+    allow.groups(['dispatcher', 'emergency-responders']).to(['create', 'read', 'update', 'delete'])
   ]),
+
+  ManualCases: a
+    .model({
+      description: a.string(),
+      natid: a.string(),
+      firstname: a.string(),
+      lastname: a.string(),
+      dob: a.date(),  
+      email: a.email(),
+      phone: a.phone(),
+      homeaddress: a.string(),
+      ICEname: a.string(),
+      ICEphone: a.phone(),
+      relationshipstatus: a.string(),
+      createdAt: a.datetime(),
+      updatedAt: a.datetime(),
+    })
+    
+    .authorization((allow) => [
+    allow.authenticated().to(['read', 'create', 'update']),
+    allow.groups(['dispatcher', 'emergency-responders']).to(['create', 'read', 'update', 'delete'])
+  ]),
+
+  Ambulance: a.model({
+    id: a.id().required(),
+    name: a.string().required(),
+    location: a.customType({
+      lat: a.float(),
+      long: a.float(),
+    }),
+    status: a.enum(['available', 'busy', 'offline']),
+    currentEmergency: a.hasOne('Emergency', 'ambulanceId'),
+    createdAt: a.datetime(),
+    updatedAt: a.datetime(),
+  }).authorization((allow) => [
+    allow.authenticated().to(['read', 'create', 'update']),
+    allow.groups(['dispatcher', 'emergency-responders']).to(['create', 'read', 'update', 'delete'])
+  ]), 
 
   Locations: a.model({
     name: a.string(),

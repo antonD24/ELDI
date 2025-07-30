@@ -115,8 +115,8 @@ export default function HomeScreen() {
       // Check for existing active emergency
       const { data: emergencies } = await client.models.Emergency.list({
         filter: {
-          natid: { eq: idNumber}, 
-          isActive: { eq: true }
+          natid: { eq: idNumber },
+          status: { eq: 'OPEN' }
         }
       });
 
@@ -130,7 +130,7 @@ export default function HomeScreen() {
       }).subscribe({
         next: (emergency) => {
           console.log('New emergency created:', emergency);
-          if (emergency.isActive) {
+          if (emergency.status && ['OPEN', 'CREATED', 'IN_PROGRESS', 'ASSIGNED'].includes(emergency.status)) {
             setHasActiveEmergency(true);
             // Cancel any ongoing hold process
             cancelHold();
@@ -151,7 +151,7 @@ export default function HomeScreen() {
         next: (emergency) => {
           console.log('Emergency updated:', emergency);
           // If this emergency is no longer active, check if we have any other active ones
-          if (!emergency.isActive) {
+          if (!emergency.status || emergency.status !== 'OPEN' ) {
             checkForAnyActiveEmergencies();
           } else {
             setHasActiveEmergency(true);
@@ -180,7 +180,12 @@ export default function HomeScreen() {
       const { data: emergencies } = await client.models.Emergency.list({
         filter: {
           natid: { eq: idNumber },
-          isActive: { eq: true }
+          or: [
+            { status: { eq: 'CREATE' } },
+            { status: { eq: 'OPEN' } },
+            { status: { eq: 'ASSIGNED' } },
+            { status: { eq: 'IN_PROGRESS' } },
+          ]
         }
       });
       
@@ -317,7 +322,12 @@ export default function HomeScreen() {
       const { data: existingEmergencies } = await client.models.Emergency.list({
         filter: {
           natid: { eq: idNumber },
-          isActive: { eq: true }
+          or: [
+            { status: { eq: 'CREATED' } },
+            { status: { eq: 'OPEN' } },
+            { status: { eq: 'ASSIGNED' } },
+            { status: { eq: 'IN_PROGRESS' } },
+          ]
         }
       });
 
