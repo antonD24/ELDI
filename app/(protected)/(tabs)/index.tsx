@@ -1,7 +1,7 @@
-
 import type { Schema } from '@/amplify/data/resource';
 import { useButtonScaleAnimation } from '@/hooks/useButtonScaleAnimation';
 import { useLiveLocation } from '@/hooks/useLiveLocation';
+import { calculateDistance, formatDistance } from '@/utils/distance';
 import { AuthUser, getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/data';
 import * as Haptics from 'expo-haptics';
@@ -16,11 +16,14 @@ export default function HomeScreen() {
   const [userData, setUserData] = useState<any>(null);
   const [hasProfile, setHasProfile] = useState<boolean>(false);
   const [hasActiveEmergency, setHasActiveEmergency] = useState<boolean>(false);
+  const [emergencyStatus, setEmergencyStatus] = useState<string | null>(null);
   const [isHolding, setIsHolding] = useState<boolean>(false);
   const [holdProgress, setHoldProgress] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [hapticMilestones, setHapticMilestones] = useState<Set<number>>(new Set());
   const [lastButtonPress, setLastButtonPress] = useState<number>(0);
+  const [ambulanceLocation, setAmbulanceLocation] = useState<{lat: number, long: number} | null>(null);
+  const [ambulanceDistance, setAmbulanceDistance] = useState<number | null>(null);
   const router = useRouter();
 
   // Refs for hold functionality
@@ -28,7 +31,72 @@ export default function HomeScreen() {
   const progressAnimationRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const holdStartTimeRef = useRef<number>(0);
 
-  const HOLD_DURATION = 3000; // 5 seconds in milliseconds
+  const HOLD_DURATION = 3000; // 3 seconds in milliseconds
+
+  // Function to calculate ambulance distance when location changes
+  const updateAmbulanceDistance = (ambulanceLoc: {lat: number, long: number} | null) => {
+    if (ambulanceLoc && location) {
+      const distance = calculateDistance(
+        location.coords.latitude,
+        location.coords.longitude,
+        ambulanceLoc.lat,
+        ambulanceLoc.long
+      );
+      setAmbulanceDistance(distance);
+      console.log(`Ambulance distance updated: ${formatDistance(distance)}`);
+    } else {
+      setAmbulanceDistance(null);
+    }
+  };
+
+  // Function to get status-specific messages
+  const getStatusMessages = (status: string | null) => {
+    const getDistanceText = () => {
+      return ambulanceDistance ? ` (${formatDistance(ambulanceDistance)} away)` : '';
+    };
+
+    switch (status) {
+      case 'CREATED':
+        return {
+          title: 'Emergency Created',
+          message: 'Your emergency request has been created and is being processed.'
+        };
+      case 'OPEN':
+        return {
+          title: 'Emergency Open',
+          message: 'Your emergency is open and being reviewed by emergency services.'
+        };
+      case 'ASSIGNED':
+        return {
+          title: 'Help Assigned',
+          message: `Emergency services have been assigned to your request. Help is on the way!${getDistanceText()}`
+        };
+      case 'IN_PROGRESS':
+        return {
+          title: 'Help En Route',
+          message: `Emergency responders are currently en route to your location${getDistanceText()}.`
+        };
+      case 'RESOLVED':
+        return {
+          title: 'Emergency Resolved',
+          message: 'Your emergency has been resolved. Stay safe!'
+        };
+      case 'REDIRECTED':
+        return {
+          title: 'Emergency Redirected',
+          message: 'You have been redirected to a different medical service.'
+        };
+      default:
+        return {
+          title: hasActiveEmergency ? 'Emergency Active' : 'Ready to Request',
+          message: hasActiveEmergency 
+            ? 'Your emergency request is being processed.' 
+            : hasProfile 
+              ? 'Hold the emergency button for 3 seconds to send an alert.' 
+              : 'Complete your profile to enable emergency alerts.'
+        };
+    }
+  };
 
   const fetchUser = async () => {
     const res = await getCurrentUser();
@@ -107,6 +175,13 @@ export default function HomeScreen() {
     }
   }, [user, idNumber]);
 
+  // Recalculate ambulance distance when user location changes
+  useEffect(() => {
+    if (ambulanceLocation && location) {
+      updateAmbulanceDistance(ambulanceLocation);
+    }
+  }, [location, ambulanceLocation]);
+
   // Check for active emergency and set up subscription
   const checkActiveEmergency = async () => {
     if (!user) return;
@@ -120,9 +195,29 @@ export default function HomeScreen() {
         }
       });
 
-      setHasActiveEmergency(emergencies && emergencies.length > 0);
+      const hasActive = emergencies && emergencies.length > 0;
+      setHasActiveEmergency(hasActive);
+      
+      if (hasActive && emergencies[0]) {
+        setEmergencyStatus(emergencies[0].status);
+        // Update ambulance location if available
+        if (emergencies[0].ambulanceLocation && 
+            emergencies[0].ambulanceLocation.lat !== null && 
+            emergencies[0].ambulanceLocation.long !== null) {
+          const ambLoc = {
+            lat: emergencies[0].ambulanceLocation.lat,
+            long: emergencies[0].ambulanceLocation.long
+          };
+          setAmbulanceLocation(ambLoc);
+          updateAmbulanceDistance(ambLoc);
+        }
+      } else {
+        setEmergencyStatus(null);
+        setAmbulanceLocation(null);
+        setAmbulanceDistance(null);
+      }
 
-      // Set up subscription for onCreate events (immediate detection of new emergencies)
+      // Set up subscriptions and return them directly
       const createSubscription = client.models.Emergency.onCreate({
         filter: {
           natid: { eq: idNumber }
@@ -132,7 +227,7 @@ export default function HomeScreen() {
           console.log('New emergency created:', emergency);
           if (emergency.status && ['OPEN', 'CREATED', 'IN_PROGRESS', 'ASSIGNED'].includes(emergency.status)) {
             setHasActiveEmergency(true);
-            // Cancel any ongoing hold process
+            setEmergencyStatus(emergency.status);
             cancelHold();
             setIsProcessing(false);
           }
@@ -142,7 +237,6 @@ export default function HomeScreen() {
         }
       });
 
-      // Set up subscription for onUpdate events (when status changes)
       const updateSubscription = client.models.Emergency.onUpdate({
         filter: {
           natid: { eq: idNumber }
@@ -150,11 +244,26 @@ export default function HomeScreen() {
       }).subscribe({
         next: (emergency) => {
           console.log('Emergency updated:', emergency);
-          // If this emergency is no longer active, check if we have any other active ones
-          if (!emergency.status || emergency.status !== 'OPEN' ) {
-            checkForAnyActiveEmergencies();
-          } else {
+          setEmergencyStatus(emergency.status);
+          
+          // Handle ambulance location updates
+          if (emergency.ambulanceLocation && 
+              emergency.ambulanceLocation.lat !== null && 
+              emergency.ambulanceLocation.long !== null) {
+            const ambLoc = {
+              lat: emergency.ambulanceLocation.lat,
+              long: emergency.ambulanceLocation.long
+            };
+            setAmbulanceLocation(ambLoc);
+            updateAmbulanceDistance(ambLoc);
+            console.log('Ambulance location updated:', ambLoc);
+          }
+          
+          const activeStatuses = ['CREATED', 'OPEN', 'ASSIGNED', 'IN_PROGRESS'];
+          if (emergency.status && activeStatuses.includes(emergency.status)) {
             setHasActiveEmergency(true);
+          } else {
+            checkForAnyActiveEmergencies();
           }
         },
         error: (error) => {
@@ -162,13 +271,11 @@ export default function HomeScreen() {
         }
       });
 
-      // Return cleanup function
-      return () => {
-        createSubscription.unsubscribe();
-        updateSubscription.unsubscribe();
-      };
+      // Return both subscriptions
+      return { createSubscription, updateSubscription };
     } catch (error) {
       console.error('Error checking active emergency:', error);
+      return undefined;
     }
   };
 
@@ -189,19 +296,30 @@ export default function HomeScreen() {
         }
       });
       
-      setHasActiveEmergency(emergencies && emergencies.length > 0);
+      const hasActive = emergencies && emergencies.length > 0;
+      setHasActiveEmergency(hasActive);
+      
+      if (hasActive && emergencies[0]) {
+        setEmergencyStatus(emergencies[0].status);
+      } else {
+        setEmergencyStatus(null);
+      }
     } catch (error) {
       console.error('Error checking for active emergencies:', error);
     }
   };
 
-  // Cleanup effect
+  // Cleanup
   useEffect(() => {
-    let subscriptionCleanup: (() => void) | undefined;
+    let createSub: any;
+    let updateSub: any;
 
     if (user && idNumber) {
-      checkActiveEmergency().then((cleanup) => {
-        subscriptionCleanup = cleanup;
+      checkActiveEmergency().then((subscriptions) => {
+        if (subscriptions) {
+          createSub = subscriptions.createSubscription;
+          updateSub = subscriptions.updateSubscription;
+        }
       });
     }
 
@@ -212,8 +330,12 @@ export default function HomeScreen() {
       if (progressAnimationRef.current) {
         clearInterval(progressAnimationRef.current);
       }
-      if (subscriptionCleanup) {
-        subscriptionCleanup();
+      // Properly unsubscribe from both subscriptions
+      if (createSub) {
+        createSub.unsubscribe();
+      }
+      if (updateSub) {
+        updateSub.unsubscribe();
       }
     };
   }, [user, idNumber]);
@@ -420,12 +542,16 @@ export default function HomeScreen() {
           lat: location.coords.latitude,
           long: location.coords.longitude,
         },
+        status: "CREATED" as const, // Initial status (as a string literal type)
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       console.log('Emergency data being sent:', emergencyData);
       
-      // Optimistically set hasActiveEmergency to prevent UI race conditions
+      // Optimistically set hasActiveEmergency
       setHasActiveEmergency(true);
+      setEmergencyStatus('CREATED'); // Set initial status
       
       const result = await client.models.Emergency.create(emergencyData);
       console.log('Emergency created successfully:', result);
@@ -436,6 +562,7 @@ export default function HomeScreen() {
         console.error('Emergency creation failed:', result.errors);
         // Reset the optimistic update on failure
         setHasActiveEmergency(false);
+        setEmergencyStatus(null);
         Alert.alert('Error', 'Failed to send emergency alert. Please try again.');
       }
       
@@ -443,12 +570,15 @@ export default function HomeScreen() {
       console.error('Error creating emergency:', error);
       // Reset the optimistic update on error
       setHasActiveEmergency(false);
+      setEmergencyStatus(null);
       
       // Check if this is a duplicate error
       const errorMessage = error instanceof Error ? error.message : String(error);
       if (errorMessage.includes('duplicate') || errorMessage.includes('already exists')) {
         Alert.alert('Active Emergency', 'You already have an active emergency request.');
         setHasActiveEmergency(true);
+        // Try to get the current status
+        checkActiveEmergency();
       } else {
         Alert.alert('Error', 'An unexpected error occurred. Please try again.');
       }
@@ -473,6 +603,12 @@ export default function HomeScreen() {
         style={{ transform: [{ scale: EmergencyScale }] }}
         onPressIn={() => {
           EmergencyIn();
+          
+
+          if (hasActiveEmergency || isProcessing) {
+            return; 
+          }
+          
           if (!hasProfile) {
             // Handle profile completion navigation
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -483,11 +619,7 @@ export default function HomeScreen() {
         }}
         onPressOut={() => {
           EmergencyOut();
-          if (hasProfile && !hasActiveEmergency && !isProcessing) {
-            cancelHold();
-          }
         }}
-        disabled={hasActiveEmergency || isProcessing}
         className={`w-[50%] aspect-square rounded-full shadow-[0px_0px_10px_0px_rgba(0,0,0,0.25)] items-center justify-center z-10 ${
           hasActiveEmergency || isProcessing
             ? 'bg-green-700' 
@@ -547,22 +679,42 @@ export default function HomeScreen() {
         </View>
       </AnimatedPressable>
 
+      {/* Cancel Button - Only show when holding */}
+      {isHolding && (
+        <Pressable
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            cancelHold();
+          }}
+          className="absolute bottom-[65%] bg-gray-600 px-6 py-3 rounded-full shadow-lg"
+        >
+          <Text className="text-white text-lg font-semibold">Cancel</Text>
+        </Pressable>
+      )}
+
       {/* Status Panel */}
       <View className="absolute bottom-0 left-0 right-0 h-1/2 bg-sky-950 rounded-tl-[50px] rounded-tr-[50px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.25)] p-4 items-center justify-center">
-        <View className="mx-auto my-auto w-[95%] h-[25%] bg-slate-900 rounded-[50px] mt-[22%] items-center justify-center px-6 py-4">
+        <View className="mx-auto my-auto w-[95%] h-[30%] bg-slate-900 rounded-[50px] mt-[20%] items-center justify-center px-6 py-4">
           <Text className="text-white text-lg font-semibold mb-2">
-            {hasActiveEmergency ? 'Emergency Active' : ' Ready to Request'}
+            {getStatusMessages(emergencyStatus).title}
           </Text>
           <Text className="text-gray-300 text-sm text-center">
-            {hasActiveEmergency 
-              ? 'Your emergency request is being processed. Help is on the way.' 
-              : hasProfile 
-                ? 'Hold the emergency button for 3 seconds to send an alert.' 
-                : 'Complete your profile to enable emergency alerts.'
-            }
+            {getStatusMessages(emergencyStatus).message}
           </Text>
           
+          {/* Show current status if there's an active emergency */}
+          {hasActiveEmergency && emergencyStatus && (
+            <Text className="text-yellow-400 text-xs mt-2 font-medium">
+              Status: {emergencyStatus.replace('_', ' ')}
+            </Text>
+          )}
           
+          {/* Show ambulance distance if available */}
+          {hasActiveEmergency && ambulanceDistance !== null && (
+            <Text className="text-amber-400 text-xs mt-1 font-medium">
+              Ambulance: {formatDistance(ambulanceDistance)}
+            </Text>
+          )}
         </View>
       
 

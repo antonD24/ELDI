@@ -53,7 +53,7 @@ export default function TabTwoScreen() {
       longitude: loc.location.long
     },
     title: loc.name,
-    snippet: loc.description || '', // Google Maps uses 'snippet' instead of 'subtitle'
+    snippet: loc.description || '', 
   })), [locations]);
 
   // Handle marker press with directions modal

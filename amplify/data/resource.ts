@@ -43,6 +43,10 @@ const schema = a.schema({
         lat: a.float(),
         long: a.float(),
       }),
+      ambulanceLocation: a.customType({
+        lat: a.float(),
+        long: a.float(),
+      }),
       status: a.ref('EmergencyStatus'),
       ambulanceId: a.id(),
       ambulance: a.belongsTo('Ambulance', 'ambulanceId'),
@@ -53,7 +57,7 @@ const schema = a.schema({
       index('natid').sortKeys(['createdAt']).name('byNatidCreatedAt'),
     ])
     .authorization((allow) => [
-    allow.authenticated().to(['read', 'create', 'update']),
+    allow.authenticated().to(['read', 'create', 'update', 'delete']),
     allow.groups(['dispatcher', 'emergency-responders']).to(['create', 'read', 'update', 'delete'])
   ]),
 
@@ -66,6 +70,10 @@ const schema = a.schema({
       dob: a.date(),  
       email: a.email(),
       phone: a.phone(),
+      location: a.customType({
+        lat: a.float(),
+        long: a.float(),
+      }),
       homeaddress: a.string(),
       ICEname: a.string(),
       ICEphone: a.phone(),
@@ -82,16 +90,18 @@ const schema = a.schema({
   Ambulance: a.model({
     id: a.id().required(),
     name: a.string().required(),
+
     location: a.customType({
       lat: a.float(),
       long: a.float(),
     }),
     status: a.enum(['available', 'busy', 'offline']),
-    currentEmergency: a.hasOne('Emergency', 'ambulanceId'),
+    emergencies: a.hasMany('Emergency', 'ambulanceId'),
     createdAt: a.datetime(),
     updatedAt: a.datetime(),
   }).authorization((allow) => [
-    allow.authenticated().to(['read', 'create', 'update']),
+    allow.authenticated().to(['read', 'create', 'update','delete']),
+
     allow.groups(['dispatcher', 'emergency-responders']).to(['create', 'read', 'update', 'delete'])
   ]), 
 
