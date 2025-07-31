@@ -2,6 +2,7 @@ import type { Schema } from '@/amplify/data/resource';
 import { useButtonScaleAnimation } from '@/hooks/useButtonScaleAnimation';
 import { useLiveLocation } from '@/hooks/useLiveLocation';
 import { calculateDistance, formatDistance } from '@/utils/distance';
+import { useFocusEffect } from '@react-navigation/native';
 import { AuthUser, getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/data';
 import * as Haptics from 'expo-haptics';
@@ -123,48 +124,60 @@ export default function HomeScreen() {
     fetchUser().then(user => setUser(user));
   }, []);
 
-  useEffect(() => {
-    const loadProfileData = async () => {
-      if (!user) return;
+  // Extract loadProfileData as a separate function so it can be reused
+  const loadProfileData = async () => {
+    if (!user) return;
+    
+    try {
+      console.log('Loading profile for authenticated user:', user.userId);
       
-      try {
-        console.log('Loading profile for authenticated user:', user.userId);
-        
-        // List all users for the current authenticated user (using owner authorization)
-        const { data: users, errors } = await client.models.User.list();
-        
-        console.log('User list response:', { users, errors });
-        
-        if (errors) {
-          console.error('Errors fetching user data:', errors);
-          return;
-        }
+      // List all users for the current authenticated user (using owner authorization)
+      const { data: users, errors } = await client.models.User.list();
+      
+      console.log('User list response:', { users, errors });
+      
+      if (errors) {
+        console.error('Errors fetching user data:', errors);
+        return;
+      }
 
-        if (users && users.length > 0) {
-          // Profile exists, load the first one (there should only be one per authenticated user)
-          const userData = users[0];
-          console.log('User data loaded:', userData);
-          setUserData(userData);
-          setHasProfile(true);
-          setIDNumber(userData.id);
-          setFirstName(userData.firstname);
-          setLastName(userData.lastname);
-          setDob(userData.dob);
-          setPhoneNumber(userData.phone || '');
-          setEmail(userData.email || '');
-          setHomeAddress(userData.homeaddress || '');
-          setICEname(userData.ICEname || '');
-          setRelationship(userData.relationshipstatus || '');
-          setICEphone(userData.ICEphone || '');
-        } else {
-          console.log('No user profile found - user needs to complete profile');
-          setHasProfile(false);
-        }
-      } catch (error) {
-        console.error('Error loading profile data:', error);
+      if (users && users.length > 0) {
+        // Profile exists, load the first one (there should only be one per authenticated user)
+        const userData = users[0];
+        console.log('User data loaded:', userData);
+        setUserData(userData);
+        setHasProfile(true);
+        setIDNumber(userData.id);
+        setFirstName(userData.firstname);
+        setLastName(userData.lastname);
+        setDob(userData.dob);
+        setPhoneNumber(userData.phone || '');
+        setEmail(userData.email || '');
+        setHomeAddress(userData.homeaddress || '');
+        setICEname(userData.ICEname || '');
+        setRelationship(userData.relationshipstatus || '');
+        setICEphone(userData.ICEphone || '');
+      } else {
+        console.log('No user profile found - user needs to complete profile');
         setHasProfile(false);
       }
-    };
+    } catch (error) {
+      console.error('Error loading profile data:', error);
+      setHasProfile(false);
+    }
+  };
+
+  // Re-check profile when screen comes into focus (e.g., returning from profile creation)
+  useFocusEffect(
+    React.useCallback(() => {
+      if (user) {
+        console.log('Screen focused - rechecking profile...');
+        loadProfileData();
+      }
+    }, [user])
+  );
+
+  useEffect(() => {
     loadProfileData();
   }, [user]);
 
