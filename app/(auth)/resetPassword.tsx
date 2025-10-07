@@ -1,11 +1,10 @@
-import { Amplify } from 'aws-amplify';
 import { confirmResetPassword, resetPassword } from 'aws-amplify/auth';
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import { Animated, Image, KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from 'react-native';
-import outputs from '../../amplify_outputs.json';
 
-Amplify.configure(outputs);
+
+
 
 export default function resetPasswordScreen() {
 

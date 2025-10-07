@@ -1,13 +1,10 @@
-import { Amplify } from 'aws-amplify';
 
 import { autoSignIn, signUp } from 'aws-amplify/auth';
 import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Animated, Image, KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from 'react-native';
-import outputs from '../../amplify_outputs.json';
 import { useButtonScaleAnimation } from '../../hooks/useButtonScaleAnimation';
     
-Amplify.configure(outputs);
 
 export default function ScreenSignUp() {
 
