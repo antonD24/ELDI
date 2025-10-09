@@ -1,5 +1,4 @@
-
-import { autoSignIn, signUp } from 'aws-amplify/auth';
+import { autoSignIn, confirmSignUp, signUp } from 'aws-amplify/auth';
 import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Animated, Image, KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from 'react-native';
@@ -81,7 +80,6 @@ export default function ScreenSignUp() {
     const onConfirmSignUP = async () => {
         setError('');
         try {
-            const { confirmSignUp } = await import('aws-amplify/auth');
             if (!signUpSession) {
                 setError('No sign-up session available.');
                 return;
